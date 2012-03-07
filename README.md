@@ -97,7 +97,7 @@ Note sulla costruzione delle email in formato HTML
 * Usare CSS inline per il testo e i link (ovvero senza servirsi di documenti .css esterni o caricati sul server): inserire gli stili CSS direttamente nel corpo dell'email (o del template).   
 Outlook non riconosce gli sfondi nelle tabelle perciò usate solo tinte unite tramite l’attributo bgcolor dei CSS.
 * Usare solo Tabelle e non elementi DIV. Purtroppo Microsoft scansa accuratamente i DIV e le E-mail vanno costruite con le Tabelle.
-* Usare inline anche gli attributi di stile delle tabelle, ovvero direttamente nel TAG TABLE (p.e. \<TR style="..."\>".
+* Usare inline anche gli attributi di stile delle tabelle, ovvero direttamente nel TAG TABLE (p.e. \<TR style="..."\>).
 * Usare le immagini JPEG (scordarsi la trasparenza dei PNG)
 
 Licenza
