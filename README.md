@@ -19,7 +19,7 @@ Utilizzo
 
 Per attivare la classe occorre includerla prima di richiamarla:
 
-	require_once(PLUGIN_DIR.OS.'/plugin/plugin.phpmailer.php');
+	require_once(PLUGIN_DIR.OS.'plugin.phpmailer.php');
 
 plugin.phpmailer.php
 --------------------
@@ -51,6 +51,8 @@ boolean **sendPHPMail**(string $**email_dest**, string $**email_mitt**, string $
 
 // PROPERTIES FOR SMTP
 
+	* issmtp [boolean]: attiva l'invio tramite SMTP (default true)
+	* smtp_service [string]: nome del servizio del server SMTP
 	* smtp_server [string]: indirizzo SMTP (se è attivo l'invio tramite SMTP)
 	* smtp_port [integer]: (default 25)
 	* smtp_auth [boolean]: autenticazione SMTP (default false)
@@ -61,7 +63,6 @@ boolean **sendPHPMail**(string $**email_dest**, string $**email_mitt**, string $
 
 	* exception [boolean]: abilita le eccezioni esterne (default false)
 	* debug [integer]: informazioni per il DEBUG: 1=solo errori, 2=tutti i messaggi, 0=niente (default)
-	* issmtp [boolean]: attiva l'invio tramite SMTP (default true)
 	* ishtml [boolean]: dichiaro che è una email html (default true)
 	* charset [integer]: set di caratteri (default UTF-8)
 	* priority [integer]: (default 3)
@@ -77,7 +78,7 @@ Esempio
 
 	public function testEmail(){
 		
-		require_once(PLUGIN_DIR.OS.'/plugin/plugin.phpmailer.php');
+		require_once(PLUGIN_DIR.OS.'plugin.phpmailer.php');
 		$mailer = new plugin_phpmailer();
 		$mailer->sendPHPMail("support@example.com", "test@example.com", "Prova invio da plugin", "Testo dell'email", 
 		array(
