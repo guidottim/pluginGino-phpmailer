@@ -112,7 +112,9 @@ class plugin_phpmailer {
 	 *   - @b nome_mitt (string): 
 	 *   - @b email_reply (string): 
 	 *   - @b nome_reply (string): 
-	 *   - @b cc (string): aggiungere uno o più destinatari come Copia Conoscenza (separati da virgola); ad esempio: dest <mail@dest.it>,dest2 <mail@dest2.it>
+	 *   - @b cc (string): aggiungere uno o più destinatari come Copia Conoscenza (separati da virgola e senza spazi); ad esempio:
+	 *     - dest <mail@dest.it>,dest2 <mail@dest2.it>
+	 *     - mail@dest.it,mail@dest2.it
 	 *   - @b mailer (boolean): mostrare il mailer (versione di PHP)
 	 * @return boolean
 	 * 
@@ -132,7 +134,7 @@ class plugin_phpmailer {
 		$additional_headers = null;
 		$additional_parameters = null;
 		
-		if($email_mitt || $email_reply || $mailer)
+		if($email_mitt || $email_reply || $mailer || $cc)
 		{
 			$additional_headers = '';
 			
@@ -143,7 +145,7 @@ class plugin_phpmailer {
 				$additional_headers .= $email_mitt;
 				if($nome_mitt) $additional_headers .= ">";
 				
-				if($email_reply || $mailer)
+				if($email_reply || $mailer || $cc)
 					$additional_headers .= "\r\n";
 			}
 			if($email_reply)
@@ -153,21 +155,19 @@ class plugin_phpmailer {
 				$additional_headers .= $email_reply;
 				if($nome_reply) $additional_headers .= ">";
 				
-				if($mailer)
+				if($mailer || $cc)
 					$additional_headers .= "\r\n";
 			}
 			if($mailer)
 			{
 				$additional_headers .= "X-Mailer: PHP/" . phpversion();
+				if($cc)
+					$additional_headers .= "\r\n";
 			}
-		}
-		
-		if($cc)
-		{
-			if($to)
-				$to = $to.", ".$cc;
-			else 
-				$to = $cc;
+			if($cc)
+			{
+				$additional_headers .= "Cc:".$cc;
+			}
 		}
 		
 		$send = mail($to, $subject, $message, $additional_headers, $additional_parameters);
