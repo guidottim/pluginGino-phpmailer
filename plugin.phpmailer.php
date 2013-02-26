@@ -115,7 +115,8 @@ class plugin_phpmailer {
 	 *   - @b cc (string): aggiungere uno o più destinatari come Copia Conoscenza (separati da virgola e senza spazi); ad esempio:
 	 *     - dest <mail@dest.it>,dest2 <mail@dest2.it>
 	 *     - mail@dest.it,mail@dest2.it
-	 *   - @b mailer (boolean): mostrare il mailer (versione di PHP)
+	 *   - @b mailer (boolean): mostrare il mailer, ovvero la versione di PHP (default false)
+	 *   - @b charset (string): set di caratteri (default UTF-8)
 	 * @return boolean
 	 * 
 	 * @b additional_headers: stringa che viene inserita alla fine dell'header dell'email (tipicamente utilizzata per aggiungere extra headers (From, Cc, and Bcc). \n
@@ -130,6 +131,7 @@ class plugin_phpmailer {
 		$nome_reply = array_key_exists('nome_reply', $options) ? $options['nome_reply'] : null;
 		$cc = array_key_exists('cc', $options) ? $options['cc'] : null;
 		$mailer = array_key_exists('mailer', $options) ? $options['mailer'] : false;
+		$charset = array_key_exists('charset', $options) ? $options['charset'] : 'UTF-8';
 		
 		$additional_headers = null;
 		$additional_parameters = null;
@@ -170,6 +172,13 @@ class plugin_phpmailer {
 			}
 		}
 		
+		if($charset == 'UTF-8')
+		{
+			$header_charset = 'MIME-Version: 1.0'."\r\n".'Content-type: text/plain; charset=UTF-8'."\r\n";
+			$subject = "=?UTF-8?B?".base64_encode($subject).'?=';
+			$additional_headers = $header_charset.$additional_headers;
+		}
+		
 		$send = mail($to, $subject, $message, $additional_headers, $additional_parameters);
 		
 		return $send;
@@ -178,6 +187,8 @@ class plugin_phpmailer {
 	/**
 	 * Invio dell'email
 	 * 
+	 * @see sendBaseMail()
+	 * @see setSMTPParams()
 	 * @param string $email_dest indirizzo email del destinatario
 	 * @param string $email_mitt indirizzo email del mittente
 	 * @param string $oggetto oggetto dell'email
@@ -204,8 +215,9 @@ class plugin_phpmailer {
 	 *   - @b exception (boolean): abilita le eccezioni esterne (default false)
 	 *   - @b debug (integer): informazioni per il DEBUG: 1=solo errori, 2=tutti i messaggi, 0=niente (default)
 	 *   - @b ishtml (boolean): dichiaro che è una email html (default true)
-	 *   - @b charset (integer): set di caratteri (default UTF-8)
+	 *   - @b charset (string): set di caratteri (default UTF-8)
 	 *   - @b priority (integer): (default 3)
+	 *   - @b mailer (boolean): mostrare il mailer nell'invio di una email con il metodo sendBaseMail() - default false
 	 *   - // METHODS, MESSAGE CREATION, ATTACHMENTS
 	 *   - @b template (string): percorso al file di template (formato HTML)
 	 *   - @b allegati (string): nome degli allegati (nel template)
@@ -241,17 +253,22 @@ class plugin_phpmailer {
 		$ishtml = array_key_exists('ishtml', $options) ? $options['ishtml'] : true;
 		$charset = array_key_exists('charset', $options) ? $options['charset'] : 'UTF-8';
 		$priority = array_key_exists('priority', $options) ? $options['priority'] : 3;
+		$mailer = array_key_exists('mailer', $options) ? $options['mailer'] : false;
 		
 		if(!$issmtp)
+		{
 			return $this->sendBaseMail($email_dest, $oggetto, $contenuto, 
 				array(
 					'email_mitt'=>$email_mitt, 
 					'nome_mitt'=>$nome_mitt, 
 					'email_reply'=>$email_mitt, 
 					'nome_reply'=>$nome_mitt, 
-					'cc'=>$cc
-				));
-		
+					'cc'=>$cc, 
+					'charset'=>$charset, 
+					'mailer'=>$mailer
+				)
+			);
+		}
 		$mail = new PHPMailer($exception);
 		$mail->IsSMTP($issmtp);
 		$mail->CharSet = $charset;
