@@ -1,50 +1,32 @@
 <?php
 /**
- * @file plugin.phpmailer.php
- * @brief Contiene la classe plugin_phpmailer
+ * @mainpage Applicazione per l'invio delle email con la libreria PHPMailer
  * 
- * @copyright 2005 Otto srl (http://www.opensource.org/licenses/mit-license.php) The MIT License
- * @author marco guidotti guidottim@gmail.com
- * @author abidibo abidibo@gmail.com
- */
-
-/**
- * @brief Invio email con la libreria PHPMailer (http://phpmailer.worxware.com/)
- * 
+ * Attualmente si fa riferimento alla versione 5.2.1. \n
  * Il sito ufficiale della libreria PHPMailer è http://phpmailer.worxware.com/. \n
- * Attualmente si fa riferimento alla versione 5.2.1.
- * 
- * @copyright 2005 Otto srl (http://www.opensource.org/licenses/mit-license.php) The MIT License
- * @author marco guidotti guidottim@gmail.com
- * @author abidibo abidibo@gmail.com
- * 
- * Il metodo sendPHPMail() si occupa di inviare le email utilizzando la libreria PHPMailer. \n
- * Qualora non si voglia attivare l'invio tramite SMTP (opzione @a issmtp), le email verranno inviate direttamente con la funzione base di PHP.
- * 
  * 
  * INSTALLAZIONE
- * ========================================================================
- * - scaricare la libreria dal sito del progetto
- * - scompattare il file compresso della libreria nella directory lib e rinominare la directory senza il numero di versione, ad esempio:
+ * ---------------
+ * 1. Scaricare la libreria dal sito del progetto
+ * 2. Scompattare il file compresso della libreria nella directory lib di gino e rinominare la directory senza il numero di versione, ad esempio:
  * @code
  * # mv PHPMailer_5.2.1 PHPMailer
  * @endcode
- * 
  * Il file PHPMailer/class.phpmailer.php deve essere caricato una sola volta nello script (poi si potranno inviare infinite email).
  * 
- * Note sulla costruzione delle email in formato HTML
- * ========================================================================
- * - Usare CSS inline per il testo e i link (ovvero senza servirsi di documenti .css esterni o caricati sul server): inserire gli stili CSS direttamente nel corpo dell'email (o del template).
- * Outlook non riconosce gli sfondi nelle tabelle perciò usate solo tinte unite tramite l’attributo bgcolor dei CSS.
- * - Usare solo Tabelle e non elementi DIV. Purtroppo Microsoft scansa accuratamente i DIV e le E-mail vanno costruite con le Tabelle.
- * - Usare inline anche gli attributi di stile delle tabelle, ovvero direttamente nel TAG TABLE (p.e. <TR style="...">".
- * - Usate le immagini JPEG (scordatevi la trasparenza dei PNG)
+ * UTILIZZO
+ * ---------------
+ * 1. Includere nel metodo che si occupa dell'invio delle email il file plugin.phpmailer.php
+ * @code
+ * require_once(PLUGIN_DIR.OS.'plugin.phpmailer.php');
+ * @endcode
+ * 2. Richiamare il metodo sendPHPMail() per inviare le email utilizzando la libreria PHPMailer. \n
+ * Qualora non si voglia attivare l'invio tramite SMTP (opzione @a issmtp), le email verranno inviate direttamente con la funzione base di PHP.
  * 
- * Esempio di utilizzo
- * ========================================================================
+ * ESEMPIO
+ * ---------------
  * @code
  * public function testEmail(){
- *   
  *   require_once(PLUGIN_DIR.OS.'plugin.phpmailer.php');
  *   $mailer = new plugin_phpmailer();
  *   $mailer->sendPHPMail("support@example.com", "test@example.com", "Prova invio da plugin", "Testo dell'email", 
@@ -59,6 +41,31 @@
  *   exit();
  * }
  * @endcode
+ * 
+ * NOTE SULLA COSTRUZIONE DELLE EMAIL IN FORMATO HTML
+ * ---------------
+ * 1. Usare CSS inline per il testo e i link (ovvero senza servirsi di documenti .css esterni o caricati sul server): inserire gli stili CSS direttamente nel corpo dell'email (o del template).
+ * Outlook non riconosce gli sfondi nelle tabelle perciò usate solo tinte unite tramite l’attributo bgcolor dei CSS.
+ * 2. Usare solo Tabelle e non elementi DIV. Purtroppo Microsoft scansa accuratamente i DIV e le E-mail vanno costruite con le Tabelle.
+ * 3. Usare inline anche gli attributi di stile delle tabelle, ovvero direttamente nel TAG TABLE (p.e. <TR style="...">".
+ * 4. Usate le immagini JPEG (scordatevi la trasparenza dei PNG)
+ */
+
+/**
+ * @file plugin.phpmailer.php
+ * @brief Contiene la classe plugin_phpmailer
+ * 
+ * @copyright 2013 Otto srl (http://www.opensource.org/licenses/mit-license.php) The MIT License
+ * @author marco guidotti guidottim@gmail.com
+ * @author abidibo abidibo@gmail.com
+ */
+
+ /**
+ * @brief Invio email con la libreria PHPMailer (http://phpmailer.worxware.com/)
+ * 
+ * @copyright 2013 Otto srl (http://www.opensource.org/licenses/mit-license.php) The MIT License
+ * @author marco guidotti guidottim@gmail.com
+ * @author abidibo abidibo@gmail.com
  */
 class plugin_phpmailer {
 	
