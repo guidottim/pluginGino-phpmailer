@@ -444,7 +444,7 @@ class plugin_phpmailer {
 		
 		if($php_mail)
 		{
-			return $this->sendPhpMail($recipient_email, $subject, $contenuto, 
+			return $this->sendPhpMail($recipient_email, $subject, $contents, 
 				array(
 					'sender_email'=>$sender_email, 
 					'sender_name'=>$sender_name, 
@@ -541,7 +541,6 @@ class plugin_phpmailer {
 					
 					$mail->addEmbeddedImage($array['path'], $array['cid'], $tmp_name);
 				}
-				
 			}
 		}
 		
