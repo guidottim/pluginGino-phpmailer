@@ -268,6 +268,7 @@ class plugin_phpmailer {
 	 *   - @b cc (string): aggiungere uno o più destinatari come Copia Conoscenza (separati da virgola e senza spazi); ad esempio:
 	 *     - dest <mail@dest.it>,dest2 <mail@dest2.it>
 	 *     - mail@dest.it,mail@dest2.it
+	 *   - @b ccn (string): aggiungere uno o più destinatari come Copia Conoscenza Nascosta
 	 *   - @b view_mailer (boolean): visualizza il mailer, ovvero la versione di php (default @a false)
 	 *   - @b charset (string): set di caratteri (default @a UTF-8)
 	 *   - @b crlf (string): default "\r\n"
@@ -284,6 +285,7 @@ class plugin_phpmailer {
 		$reply_email = array_key_exists('reply_email', $options) ? $options['reply_email'] : null;
 		$reply_name = array_key_exists('reply_name', $options) ? $options['reply_name'] : null;
 		$cc = array_key_exists('cc', $options) ? $options['cc'] : null;
+		$ccn = array_key_exists('ccn', $options) ? $options['ccn'] : null;
 		$view_mailer = array_key_exists('view_mailer', $options) ? $options['view_mailer'] : false;
 		$charset = array_key_exists('charset', $options) ? $options['charset'] : 'UTF-8';
 		$crlf = array_key_exists('crlf', $options) && $options['crlf'] ? $options['crlf'] : "\r\n";
@@ -291,40 +293,42 @@ class plugin_phpmailer {
 		$additional_headers = null;
 		$additional_parameters = null;
 		
-		if($sender_email || $reply_email || $view_mailer || $cc)
+		if($sender_email || $reply_email || $view_mailer || $cc || $ccn)
 		{
-			$additional_headers = '';
+			$headers = array();
 			
 			if($sender_email)
 			{
-				$additional_headers .= "From:";
-				if($sender_name) $additional_headers .= $sender_name." <";
-				$additional_headers .= $sender_email;
-				if($sender_name) $additional_headers .= ">";
+				$text = "From:";
+				if($sender_name) $text .= $sender_name." <";
+				$text .= $sender_email;
+				if($sender_name) $text .= ">";
 				
-				if($reply_email || $view_mailer || $cc)
-					$additional_headers .= $crlf;
+				$headers[] = $text;
 			}
 			if($reply_email)
 			{
-				$additional_headers .= "Reply-To:";
-				if($reply_name) $additional_headers .= $reply_name." <";
-				$additional_headers .= $reply_email;
-				if($reply_name) $additional_headers .= ">";
+				$text = "Reply-To:";
+				if($reply_name) $text .= $reply_name." <";
+				$text .= $reply_email;
+				if($reply_name) $text .= ">";
 				
-				if($view_mailer || $cc)
-					$additional_headers .= $crlf;
+				$headers[] = $text;
 			}
 			if($view_mailer)
 			{
-				$additional_headers .= "X-Mailer: PHP/" . phpversion();
-				if($cc)
-					$additional_headers .= $crlf;
+				$headers[] = "X-Mailer: PHP/" . phpversion();
 			}
 			if($cc)
 			{
-				$additional_headers .= "Cc:".$cc;
+				$headers[] = "Cc:".$cc;
 			}
+			if($ccn)
+			{
+				$headers[] = "Bcc:".$ccn;
+			}
+			
+			$additional_headers = implode($crlf, $headers);
 		}
 		
 		if($charset == 'UTF-8')
@@ -446,13 +450,14 @@ class plugin_phpmailer {
 		{
 			return $this->sendPhpMail($recipient_email, $subject, $contents, 
 				array(
-					'sender_email'=>$sender_email, 
-					'sender_name'=>$sender_name, 
-					'reply_email'=>$reply_email, 
-					'reply_name'=>$reply_name, 
-					'cc'=>$cc, 
-					'charset'=>$charset, 
-					'view_mailer'=>$view_mailer
+					'sender_email' => $sender_email, 
+					'sender_name' => $sender_name, 
+					'reply_email' => $reply_email, 
+					'reply_name' => $reply_name, 
+					'cc' => $cc, 
+					'ccn' => $ccn,
+					'charset' => $charset, 
+					'view_mailer' => $view_mailer
 				)
 			);
 		}
